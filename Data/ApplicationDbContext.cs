@@ -1,3 +1,5 @@
+using EFCoreIsitech.Data.Configurations;
+using EFCoreIsitech.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreIsitech.Data;
@@ -11,16 +13,19 @@ public class ApplicationDbContext : DbContext
 
     // Define your DbSets (tables) here
     public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<Customer> Customers { get; set; } = null!;
+    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<OrderItem> OrderItems { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        // Seed some initial data
-        modelBuilder.Entity<Product>().HasData(
-            new Product { Id = 1, Name = "Product 1", Price = 10.99m },
-            new Product { Id = 2, Name = "Product 2", Price = 19.99m },
-            new Product { Id = 3, Name = "Product 3", Price = 5.99m }
-        );
+        modelBuilder.ApplyConfiguration(new ProductConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
     }
 }
