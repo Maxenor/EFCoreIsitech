@@ -23,9 +23,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Description)
             .HasMaxLength(500);
             
-        builder.Property(p => p.Stock)
-            .HasDefaultValue(0);
-            
         builder.Property(p => p.IsAvailable)
             .HasDefaultValue(true);
             
@@ -35,8 +32,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
             
+        // Configure computed properties
+        builder.Ignore(p => p.AverageRating);
+        builder.Ignore(p => p.ReviewCount);
+        builder.Ignore(p => p.InStock);
+            
         // Indexes
         builder.HasIndex(p => p.Name);
         builder.HasIndex(p => p.CategoryId);
+        builder.HasIndex(p => p.Price);
     }
 }

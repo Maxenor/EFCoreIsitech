@@ -20,8 +20,6 @@ public class Product
     
     public string? ImageUrl { get; set; }
     
-    public int Stock { get; set; }
-    
     public bool IsAvailable { get; set; } = true;
     
     // Navigation properties
@@ -29,4 +27,21 @@ public class Product
     public virtual Category? Category { get; set; }
     
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    
+    // New navigation properties for our added features
+    public virtual ProductInventory? Inventory { get; set; }
+    
+    public virtual ICollection<ProductRating> Ratings { get; set; } = new List<ProductRating>();
+    
+    public virtual ICollection<ProductPriceHistory> PriceHistory { get; set; } = new List<ProductPriceHistory>();
+    
+    // Computed properties
+    [NotMapped]
+    public decimal AverageRating => (decimal)(Ratings.Any() ? Ratings.Average(r => r.Rating) : 0);
+    
+    [NotMapped]
+    public int ReviewCount => Ratings.Count;
+    
+    [NotMapped]
+    public bool InStock => Inventory != null && Inventory.QuantityInStock > 0;
 }

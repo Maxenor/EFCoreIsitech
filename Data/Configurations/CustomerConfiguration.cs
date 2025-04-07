@@ -27,17 +27,13 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.Phone)
             .HasMaxLength(20);
             
-        builder.Property(c => c.Address)
-            .HasMaxLength(200);
-            
-        // Ignore computed property
         builder.Ignore(c => c.FullName);
+        builder.Ignore(c => c.DefaultBillingAddress);
+        builder.Ignore(c => c.DefaultShippingAddress);
         
-        // Indexes
         builder.HasIndex(c => c.Email)
             .IsUnique();
             
-        // Seed data
         builder.HasData(
             new Customer 
             { 
@@ -45,8 +41,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
                 FirstName = "John", 
                 LastName = "Doe", 
                 Email = "john.doe@example.com",
-                Phone = "555-123-4567",
-                Address = "123 Main St, Anytown, AN 12345"
+                Phone = "555-123-4567"
             },
             new Customer 
             { 
@@ -54,8 +49,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
                 FirstName = "Jane", 
                 LastName = "Smith", 
                 Email = "jane.smith@example.com",
-                Phone = "555-987-6543",
-                Address = "456 Oak Ave, Somewhere, SW 67890"
+                Phone = "555-987-6543"
             }
         );
     }

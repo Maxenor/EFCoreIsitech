@@ -18,14 +18,27 @@ public class ApplicationDbContext : DbContext
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
     
+    // New DbSets for the enhanced model
+    public DbSet<Address> Addresses { get; set; } = null!;
+    public DbSet<ProductInventory> ProductInventories { get; set; } = null!;
+    public DbSet<ProductRating> ProductRatings { get; set; } = null!;
+    public DbSet<ProductPriceHistory> ProductPriceHistories { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
+        // Apply existing configurations
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         modelBuilder.ApplyConfiguration(new CustomerConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
         modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+        
+        // Apply new configurations
+        modelBuilder.ApplyConfiguration(new AddressConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductInventoryConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductRatingConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductPriceHistoryConfiguration());
     }
 }

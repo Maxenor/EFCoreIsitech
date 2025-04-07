@@ -22,12 +22,18 @@ public class Customer
     [MaxLength(20)]
     public string? Phone { get; set; }
     
-    [MaxLength(200)]
-    public string? Address { get; set; }
-    
     // Navigation properties
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     
+    // New navigation property for addresses
+    public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
+    
+    [NotMapped]
+    public Address? DefaultBillingAddress => Addresses.FirstOrDefault(a => a.Type == AddressType.Billing && a.IsDefault);
+    
+    [NotMapped]
+    public Address? DefaultShippingAddress => Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping && a.IsDefault);
 }
