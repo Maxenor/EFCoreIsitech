@@ -27,16 +27,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Apply database creation/migrations at startup
+// Apply database migrations at startup
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     
-    // Create database if it doesn't exist
-    dbContext.Database.EnsureCreated();
-    
-    // Optional: Apply pending migrations if using migrations
-    // dbContext.Database.Migrate();
+    // Apply pending migrations
+    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

@@ -32,5 +32,33 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         // Indexes
         builder.HasIndex(o => o.OrderDate);
         builder.HasIndex(o => o.CustomerId);
+        
+        // Seed data
+        builder.HasData(
+            new Order
+            {
+                Id = 1,
+                OrderDate = new DateTime(2025, 3, 15),
+                CustomerId = 1,
+                Status = OrderStatus.Delivered,
+                TotalAmount = 624.98m
+            },
+            new Order
+            {
+                Id = 2,
+                OrderDate = new DateTime(2025, 3, 20),
+                CustomerId = 2,
+                Status = OrderStatus.Shipped,
+                TotalAmount = 1299.99m
+            },
+            new Order
+            {
+                Id = 3,
+                OrderDate = new DateTime(2025, 4, 1),
+                CustomerId = 1,
+                Status = OrderStatus.Processing,
+                TotalAmount = 74.98m
+            }
+        );
     }
 }

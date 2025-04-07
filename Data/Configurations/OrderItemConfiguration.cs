@@ -36,5 +36,54 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             
         // Indexes
         builder.HasIndex(oi => new { oi.OrderId, oi.ProductId });
+        
+        // Seed data
+        builder.HasData(
+            // Order 1 items
+            new OrderItem
+            {
+                Id = 1,
+                OrderId = 1,
+                ProductId = 1,
+                Quantity = 1,
+                UnitPrice = 599.99m
+            },
+            new OrderItem
+            {
+                Id = 2,
+                OrderId = 1,
+                ProductId = 4,
+                Quantity = 1,
+                UnitPrice = 24.99m
+            },
+            
+            // Order 2 items
+            new OrderItem
+            {
+                Id = 3,
+                OrderId = 2,
+                ProductId = 2,
+                Quantity = 1,
+                UnitPrice = 1299.99m
+            },
+            
+            // Order 3 items
+            new OrderItem
+            {
+                Id = 4,
+                OrderId = 3,
+                ProductId = 3,
+                Quantity = 2,
+                UnitPrice = 14.99m
+            },
+            new OrderItem
+            {
+                Id = 5,
+                OrderId = 3,
+                ProductId = 4,
+                Quantity = 2,
+                UnitPrice = 24.99m
+            }
+        );
     }
 }
