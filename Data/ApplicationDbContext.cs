@@ -1,6 +1,7 @@
 using EFCoreIsitech.Data.Configurations;
 using EFCoreIsitech.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EFCoreIsitech.Data;
 
@@ -23,6 +24,14 @@ public class ApplicationDbContext : DbContext
     public DbSet<ProductInventory> ProductInventories { get; set; } = null!;
     public DbSet<ProductRating> ProductRatings { get; set; } = null!;
     public DbSet<ProductPriceHistory> ProductPriceHistories { get; set; } = null!;
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .EnableSensitiveDataLogging()
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableDetailedErrors();
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
