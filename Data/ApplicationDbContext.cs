@@ -1,4 +1,5 @@
 using EFCoreIsitech.Data.Configurations;
+using EFCoreIsitech.Data.Interceptors;
 using EFCoreIsitech.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,9 +8,14 @@ namespace EFCoreIsitech.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    private readonly AuditInterceptor? _auditInterceptor;
+
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        AuditInterceptor? auditInterceptor = null)
         : base(options)
     {
+        _auditInterceptor = auditInterceptor;
     }
 
     // Define your DbSets (tables) here
@@ -27,10 +33,17 @@ public class ApplicationDbContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // Add diagnostic logging settings
         optionsBuilder
             .EnableSensitiveDataLogging()
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableDetailedErrors();
+            
+        // Add the audit interceptor if available
+        if (_auditInterceptor != null)
+        {
+            optionsBuilder.AddInterceptors(_auditInterceptor);
+        }
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

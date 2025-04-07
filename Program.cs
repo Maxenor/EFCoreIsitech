@@ -1,4 +1,7 @@
 using EFCoreIsitech.Data;
+using EFCoreIsitech.Data.Interceptors;
+using EFCoreIsitech.Data.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +13,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register HttpContextAccessor for current user information
+builder.Services.AddHttpContextAccessor();
+
+// Register CurrentUserService for auditing
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+// Register AuditInterceptor
+builder.Services.AddScoped<AuditInterceptor>();
+
 // Add MariaDB database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDbContext<ApplicationDbContext>((sp, options) => {
+    var auditInterceptor = sp.GetService<AuditInterceptor>();
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    
+    if (auditInterceptor != null)
+    {
+        options.AddInterceptors(auditInterceptor);
+    }
+});
 
 // Add basic health checks
 builder.Services.AddHealthChecks();
